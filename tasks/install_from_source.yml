@@ -1,0 +1,30 @@
+---
+- name: install dependencies
+  apt: pkg={{ item }} update_cache=yes cache_valid_time=86400 state=present
+  with_items:
+    - git
+  when: ansible_os_family == "Debian"
+
+- name: install dependencies
+  yum: name={{ item }} state=present
+  with_items:
+    - git
+  when: ansible_os_family == "RedHat"
+
+- name: download source code
+  git: repo=https://github.com/rebar/rebar.git
+       dest={{ rebar_download_dir }}
+       version={{ rebar_version }}
+       update=no
+
+- name: compile rebar using the bootstrap script
+  command: ./bootstrap
+  args:
+    chdir: "{{ rebar_download_dir }}"
+    creates: rebar
+
+- name: copy script into user's bin directory
+  copy: src={{ rebar_download_dir }}/rebar
+        dest={{ rebar_bin }}
+        mode=0777
+  sudo: yes

@@ -1,0 +1,6 @@
+---
+- name: download precompiled script
+  get_url: url=https://github.com/rebar/rebar/releases/download/{{ rebar_version }}/rebar
+           dest={{ rebar_bin }}
+           mode=0777
+  sudo: yes

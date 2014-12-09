@@ -1,0 +1,6 @@
+---
+- include: install.yml
+  when: rebar_install_from_source == false
+
+- include: install_from_source.yml
+  when: rebar_install_from_source == true
